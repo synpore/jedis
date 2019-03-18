@@ -6,10 +6,10 @@ import java.util.Set;
 
 import redis.clients.jedis.commands.BinaryRedisPipeline;
 import redis.clients.jedis.commands.RedisPipeline;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
-import redis.clients.jedis.params.set.SetParams;
-import redis.clients.jedis.params.sortedset.ZAddParams;
-import redis.clients.jedis.params.sortedset.ZIncrByParams;
+import redis.clients.jedis.params.GeoRadiusParam;
+import redis.clients.jedis.params.SetParams;
+import redis.clients.jedis.params.ZAddParams;
+import redis.clients.jedis.params.ZIncrByParams;
 
 public abstract class PipelineBase extends Queable implements BinaryRedisPipeline, RedisPipeline {
 
@@ -181,19 +181,23 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.BOOLEAN);
   }
 
+  @Override
   public Response<Long> bitpos(final String key, final boolean value) {
     return bitpos(key, value, new BitPosParams());
   }
 
+  @Override
   public Response<Long> bitpos(final String key, final boolean value, final BitPosParams params) {
     getClient(key).bitpos(key, value, params);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> bitpos(final byte[] key, final boolean value) {
     return bitpos(key, value, new BitPosParams());
   }
 
+  @Override
   public Response<Long> bitpos(final byte[] key, final boolean value, final BitPosParams params) {
     getClient(key).bitpos(key, value, params);
     return getResponse(BuilderFactory.LONG);
@@ -619,11 +623,13 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> set(final String key, final String value, SetParams params) {
     getClient(key).set(key, value, params);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> set(final byte[] key, final byte[] value, SetParams params) {
     getClient(key).set(key, value, params);
     return getResponse(BuilderFactory.STRING);
@@ -755,6 +761,7 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<List<String>> srandmember(final String key, final int count) {
     getClient(key).srandmember(key, count);
     return getResponse(BuilderFactory.STRING_LIST);
@@ -766,6 +773,7 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<List<byte[]>> srandmember(final byte[] key, final int count) {
     getClient(key).srandmember(key, count);
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
@@ -1021,6 +1029,7 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.TUPLE_ZSET);
   }
 
+  @Override
   public Response<Set<Tuple>> zrangeByScoreWithScores(final String key, final String min, final String max) {
     getClient(key).zrangeByScoreWithScores(key, min, max);
     return getResponse(BuilderFactory.TUPLE_ZSET);
@@ -1045,6 +1054,7 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.TUPLE_ZSET);
   }
 
+  @Override
   public Response<Set<Tuple>> zrangeByScoreWithScores(final String key, final String min, final String max,
       final int offset, final int count) {
     getClient(key).zrangeByScoreWithScores(key, min, max, offset, count);
@@ -1389,51 +1399,63 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<byte[]> dump(final String key) {
     getClient(key).dump(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<byte[]> dump(final byte[] key) {
     getClient(key).dump(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
-  public Response<String> migrate(final String host, final int port, final String key, final int destinationDb, final int timeout) {
+  @Override
+  public Response<String> migrate(final String host, final int port,
+      final String key, final int destinationDb, final int timeout) {
     getClient(key).migrate(host, port, key, destinationDb, timeout);
     return getResponse(BuilderFactory.STRING);
   }
 
-  public Response<String> migrate(final byte[] host, final int port, final byte[] key, final int destinationDb, final int timeout) {
+  @Override
+  public Response<String> migrate(final String host, final int port,
+      final byte[] key, final int destinationDb, final int timeout) {
     getClient(key).migrate(host, port, key, destinationDb, timeout);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Long> objectRefcount(final String key) {
     getClient(key).objectRefcount(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> objectRefcount(final byte[] key) {
     getClient(key).objectRefcount(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> objectEncoding(final String key) {
     getClient(key).objectEncoding(key);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<byte[]> objectEncoding(final byte[] key) {
     getClient(key).objectEncoding(key);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  @Override
   public Response<Long> objectIdletime(final String key) {
     getClient(key).objectIdletime(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> objectIdletime(final byte[] key) {
     getClient(key).objectIdletime(key);
     return getResponse(BuilderFactory.LONG);
@@ -1463,51 +1485,73 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> pttl(final String key) {
     getClient(key).pttl(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<Long> pttl(final byte[] key) {
     getClient(key).pttl(key);
     return getResponse(BuilderFactory.LONG);
   }
 
+  @Override
   public Response<String> restore(final String key, final int ttl, final byte[] serializedValue) {
     getClient(key).restore(key, ttl, serializedValue);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> restore(final byte[] key, final int ttl, final byte[] serializedValue) {
     getClient(key).restore(key, ttl, serializedValue);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
+  public Response<String> restoreReplace(final String key, final int ttl, final byte[] serializedValue) {
+    getClient(key).restoreReplace(key, ttl, serializedValue);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> restoreReplace(final byte[] key, final int ttl, final byte[] serializedValue) {
+    getClient(key).restoreReplace(key, ttl, serializedValue);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
   public Response<Double> incrByFloat(final String key, final double increment) {
     getClient(key).incrByFloat(key, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<Double> incrByFloat(final byte[] key, final double increment) {
     getClient(key).incrByFloat(key, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<String> psetex(final String key, final long milliseconds, final String value) {
     getClient(key).psetex(key, milliseconds, value);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<String> psetex(final byte[] key, final long milliseconds, final byte[] value) {
     getClient(key).psetex(key, milliseconds, value);
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
   public Response<Double> hincrByFloat(final String key, final String field, final double increment) {
     getClient(key).hincrByFloat(key, field, increment);
     return getResponse(BuilderFactory.DOUBLE);
   }
 
+  @Override
   public Response<Double> hincrByFloat(final byte[] key, final byte[] field, final double increment) {
     getClient(key).hincrByFloat(key, field, increment);
     return getResponse(BuilderFactory.DOUBLE);
@@ -1617,9 +1661,23 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<List<GeoRadiusResponse>> georadiusReadonly(final byte[] key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit) {
+    getClient(key).georadiusReadonly(key, longitude, latitude, radius, unit);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
   public Response<List<GeoRadiusResponse>> georadius(final byte[] key, final double longitude, final double latitude,
       final double radius, final GeoUnit unit, final GeoRadiusParam param) {
     getClient(key).georadius(key, longitude, latitude, radius, unit, param);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
+  public Response<List<GeoRadiusResponse>> georadiusReadonly(final byte[] key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit, final GeoRadiusParam param) {
+    getClient(key).georadiusReadonly(key, longitude, latitude, radius, unit, param);
     return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
   }
 
@@ -1631,6 +1689,13 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<List<GeoRadiusResponse>> georadiusReadonly(final String key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit) {
+    getClient(key).georadiusReadonly(key, longitude, latitude, radius, unit);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
   public Response<List<GeoRadiusResponse>> georadius(final String key, final double longitude, final double latitude,
       final double radius, final GeoUnit unit, final GeoRadiusParam param) {
     getClient(key).georadius(key, longitude, latitude, radius, unit, param);
@@ -1638,9 +1703,23 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<List<GeoRadiusResponse>> georadiusReadonly(final String key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit, final GeoRadiusParam param) {
+    getClient(key).georadiusReadonly(key, longitude, latitude, radius, unit, param);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
   public Response<List<GeoRadiusResponse>> georadiusByMember(final byte[] key, final byte[] member,
       final double radius, final GeoUnit unit) {
     getClient(key).georadiusByMember(key, member, radius, unit);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
+  public Response<List<GeoRadiusResponse>> georadiusByMemberReadonly(final byte[] key, final byte[] member,
+      final double radius, final GeoUnit unit) {
+    getClient(key).georadiusByMemberReadonly(key, member, radius, unit);
     return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
   }
 
@@ -1652,6 +1731,13 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<List<GeoRadiusResponse>> georadiusByMemberReadonly(final byte[] key, final byte[] member,
+      final double radius, final GeoUnit unit, final GeoRadiusParam param) {
+    getClient(key).georadiusByMemberReadonly(key, member, radius, unit, param);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
   public Response<List<GeoRadiusResponse>> georadiusByMember(final String key, final String member,
       final double radius, final GeoUnit unit) {
     getClient(key).georadiusByMember(key, member, radius, unit);
@@ -1659,9 +1745,23 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<List<GeoRadiusResponse>> georadiusByMemberReadonly(final String key, final String member,
+      final double radius, final GeoUnit unit) {
+    getClient(key).georadiusByMemberReadonly(key, member, radius, unit);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
   public Response<List<GeoRadiusResponse>> georadiusByMember(final String key, final String member,
       final double radius, final GeoUnit unit, final GeoRadiusParam param) {
     getClient(key).georadiusByMember(key, member, radius, unit, param);
+    return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
+  }
+
+  @Override
+  public Response<List<GeoRadiusResponse>> georadiusByMemberReadonly(final String key, final String member,
+      final double radius, final GeoUnit unit, final GeoRadiusParam param) {
+    getClient(key).georadiusByMemberReadonly(key, member, radius, unit, param);
     return getResponse(BuilderFactory.GEORADIUS_WITH_PARAMS_RESULT);
   }
 

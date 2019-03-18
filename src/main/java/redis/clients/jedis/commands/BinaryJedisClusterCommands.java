@@ -1,10 +1,17 @@
 package redis.clients.jedis.commands;
 
-import redis.clients.jedis.*;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
-import redis.clients.jedis.params.set.SetParams;
-import redis.clients.jedis.params.sortedset.ZAddParams;
-import redis.clients.jedis.params.sortedset.ZIncrByParams;
+import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.GeoRadiusResponse;
+import redis.clients.jedis.GeoUnit;
+import redis.clients.jedis.ListPosition;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.Tuple;
+import redis.clients.jedis.params.GeoRadiusParam;
+import redis.clients.jedis.params.SetParams;
+import redis.clients.jedis.params.ZAddParams;
+import redis.clients.jedis.params.ZIncrByParams;
 
 import java.util.Collection;
 import java.util.List;
@@ -269,12 +276,23 @@ public interface BinaryJedisClusterCommands {
   List<GeoRadiusResponse> georadius(byte[] key, double longitude, double latitude, double radius,
       GeoUnit unit);
 
+  List<GeoRadiusResponse> georadiusReadonly(byte[] key, double longitude, double latitude, double radius,
+      GeoUnit unit);
+
   List<GeoRadiusResponse> georadius(byte[] key, double longitude, double latitude, double radius,
+      GeoUnit unit, GeoRadiusParam param);
+
+  List<GeoRadiusResponse> georadiusReadonly(byte[] key, double longitude, double latitude, double radius,
       GeoUnit unit, GeoRadiusParam param);
 
   List<GeoRadiusResponse> georadiusByMember(byte[] key, byte[] member, double radius, GeoUnit unit);
 
+  List<GeoRadiusResponse> georadiusByMemberReadonly(byte[] key, byte[] member, double radius, GeoUnit unit);
+
   List<GeoRadiusResponse> georadiusByMember(byte[] key, byte[] member, double radius, GeoUnit unit,
+      GeoRadiusParam param);
+
+  List<GeoRadiusResponse> georadiusByMemberReadonly(byte[] key, byte[] member, double radius, GeoUnit unit,
       GeoRadiusParam param);
 
   ScanResult<Map.Entry<byte[], byte[]>> hscan(byte[] key, byte[] cursor);
@@ -293,6 +311,7 @@ public interface BinaryJedisClusterCommands {
    * Executes BITFIELD Redis command
    * @param key
    * @param arguments
+   * @return 
    */
   List<Long> bitfield(byte[] key, byte[]... arguments);
   
@@ -300,7 +319,9 @@ public interface BinaryJedisClusterCommands {
    * Used for HSTRLEN Redis command
    * @param key 
    * @param field
+   * @return 
    */
   Long hstrlen(byte[] key, byte[] field);
 
+  Long waitReplicas(byte[] key, final int replicas, final long timeout);
 }

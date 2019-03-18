@@ -8,11 +8,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
-import redis.clients.jedis.params.set.SetParams;
-import redis.clients.jedis.params.sortedset.ZAddParams;
-import redis.clients.jedis.params.sortedset.ZIncrByParams;
-import redis.clients.util.Hashing;
+import redis.clients.jedis.params.GeoRadiusParam;
+import redis.clients.jedis.params.SetParams;
+import redis.clients.jedis.params.ZAddParams;
+import redis.clients.jedis.params.ZIncrByParams;
+import redis.clients.jedis.util.Hashing;
 
 public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, Closeable {
 
@@ -80,6 +80,12 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   public String restore(final String key, final int ttl, final byte[] serializedValue) {
     Jedis j = getShard(key);
     return j.restore(key, ttl, serializedValue);
+  }
+
+  @Override
+  public String restoreReplace(final String key, final int ttl, final byte[] serializedValue) {
+    Jedis j = getShard(key);
+    return j.restoreReplace(key, ttl, serializedValue);
   }
 
   @Override
@@ -822,6 +828,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
       } else {
         dataSource.returnResource(this);
       }
+      this.dataSource = null;
 
     } else {
       disconnect();
@@ -900,10 +907,24 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   }
 
   @Override
+  public List<GeoRadiusResponse> georadiusReadonly(final String key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit) {
+    Jedis j = getShard(key);
+    return j.georadiusReadonly(key, longitude, latitude, radius, unit);
+  }
+
+  @Override
   public List<GeoRadiusResponse> georadius(final String key, final double longitude, final double latitude,
       final double radius, final GeoUnit unit, final GeoRadiusParam param) {
     Jedis j = getShard(key);
     return j.georadius(key, longitude, latitude, radius, unit, param);
+  }
+
+  @Override
+  public List<GeoRadiusResponse> georadiusReadonly(final String key, final double longitude, final double latitude,
+      final double radius, final GeoUnit unit, final GeoRadiusParam param) {
+    Jedis j = getShard(key);
+    return j.georadiusReadonly(key, longitude, latitude, radius, unit, param);
   }
 
   @Override
@@ -914,10 +935,24 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   }
 
   @Override
+  public List<GeoRadiusResponse> georadiusByMemberReadonly(final String key, final String member, final double radius,
+      final GeoUnit unit) {
+    Jedis j = getShard(key);
+    return j.georadiusByMemberReadonly(key, member, radius, unit);
+  }
+
+  @Override
   public List<GeoRadiusResponse> georadiusByMember(final String key, final String member, final double radius,
       final GeoUnit unit, final GeoRadiusParam param) {
     Jedis j = getShard(key);
     return j.georadiusByMember(key, member, radius, unit, param);
+  }
+
+  @Override
+  public List<GeoRadiusResponse> georadiusByMemberReadonly(final String key, final String member, final double radius,
+      final GeoUnit unit, final GeoRadiusParam param) {
+    Jedis j = getShard(key);
+    return j.georadiusByMemberReadonly(key, member, radius, unit, param);
   }
 
   @Override

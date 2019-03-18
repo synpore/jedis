@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import redis.clients.util.SafeEncoder;
+import redis.clients.jedis.util.SafeEncoder;
 
 public abstract class Params {
 
@@ -19,19 +19,26 @@ public abstract class Params {
   }
 
   public byte[][] getByteParams() {
+    if (params == null) return new byte[0][];
     ArrayList<byte[]> byteParams = new ArrayList<byte[]>();
 
     for (Entry<String, Object> param : params.entrySet()) {
       byteParams.add(SafeEncoder.encode(param.getKey()));
-      if (param.getValue() != null) {
-        byteParams.add(SafeEncoder.encode(String.valueOf(param.getValue())));
+
+      Object value = param.getValue();
+      if (value != null) {
+        if (value instanceof byte[]) {
+          byteParams.add((byte[]) value);
+        } else {
+          byteParams.add(SafeEncoder.encode(String.valueOf(value)));
+        }
       }
     }
 
     return byteParams.toArray(new byte[byteParams.size()][]);
   }
 
-  public boolean contains(String name) {
+  protected boolean contains(String name) {
     if (params == null) return false;
 
     return params.containsKey(name);

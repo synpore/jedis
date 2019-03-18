@@ -13,7 +13,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import redis.clients.util.SafeEncoder;
+import redis.clients.jedis.util.SafeEncoder;
 
 public class ScanParams {
 
@@ -29,6 +29,9 @@ public class ScanParams {
 
   /**
    * @see <a href="https://redis.io/commands/scan#the-match-option">MATCH option in Redis documentation</a>
+   * 
+   * @param pattern
+   * @return 
    */
   public ScanParams match(final String pattern) {
     params.put(MATCH, ByteBuffer.wrap(SafeEncoder.encode(pattern)));
@@ -37,6 +40,9 @@ public class ScanParams {
 
   /**
    * @see <a href="https://redis.io/commands/scan#the-count-option">COUNT option in Redis documentation</a>
+   * 
+   * @param count
+   * @return 
    */
   public ScanParams count(final Integer count) {
     params.put(COUNT, ByteBuffer.wrap(Protocol.toByteArray(count)));
